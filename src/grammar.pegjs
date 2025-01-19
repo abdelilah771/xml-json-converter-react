@@ -1,26 +1,25 @@
+// Functions
 {
-  // Functions to convert between JSON and XML
   function jsonToXml(json) {
     if (typeof json === "string") return json;
 
     if (Array.isArray(json)) {
-      return json.map(jsonToXml).join("");
+      return json.map(jsonToXml).join('');
     }
 
-    return Object.entries(json).map(([key, value]) => {
-      const content = jsonToXml(value);
-      return `<${key}>${content}</${key}>`;
-    }).join("");
+    return Object.entries(json)
+      .map(([key, value]) => `<${key}>${jsonToXml(value)}</${key}>`)
+      .join('');
   }
 
   function xmlToJson(tag, content) {
-    if (!content) return { [tag]: "" };
+    if (!content) return { [tag]: '' };
 
     const children = content.match(/<([^>]+)>(.*?)<\/\1>/gs) || [];
     if (!children.length) return { [tag]: content.trim() };
 
     const result = {};
-    children.forEach(child => {
+    children.forEach((child) => {
       const [, childTag, childContent] = child.match(/<([^>]+)>(.*?)<\/\1>/s);
       if (result[childTag]) {
         if (!Array.isArray(result[childTag])) result[childTag] = [result[childTag]];
@@ -74,10 +73,10 @@ elements
     }
 
 string
-  = "\"" chars:([^"\\] / "\\\"")* "\"" { return chars.join(""); }
+  = "\"" chars:([^"\\] / "\\\"")* "\"" { return chars.join(''); }
 
 number
-  = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
+  = digits:[0-9]+ { return parseInt(digits.join(''), 10); }
 
 // XML Parsing
 xml
@@ -87,10 +86,10 @@ xml
       }
       const children = content.length === 1 ? content[0] : content;
       if (typeof children === "string") {
-        return xmlToJson(tag, children.trim()); // Trim whitespace
+        return xmlToJson(tag, children.trim());
       } else {
         const result = {};
-        content.forEach(child => {
+        content.forEach((child) => {
           if (typeof child === "object" && child !== null) {
             const [key, value] = Object.entries(child)[0];
             if (result[key]) {
@@ -110,11 +109,12 @@ xmlContent
   / text
 
 text
-  = chars:[^<]+ { return chars.join("").trim(); } // Trim whitespace
+  = chars:[^<]+ { return chars.join('').trim(); }
 
 tagName
-  = chars:[a-zA-Z0-9_]+ { return chars.join(""); }
+  = chars:[a-zA-Z0-9_]+ { return chars.join(''); }
 
-// Whitespace rule
+// Whitespace
 _ "Whitespace"
   = [ \t\n\r]*
+

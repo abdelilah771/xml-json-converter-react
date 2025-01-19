@@ -182,10 +182,10 @@ function peg$parse(input, options) {
       peg$c30 = peg$classExpectation(["\"", "\\"], true, false),
       peg$c31 = "\\\"",
       peg$c32 = peg$literalExpectation("\\\"", false),
-      peg$c33 = function(chars) { return chars.join(""); },
+      peg$c33 = function(chars) { return chars.join(''); },
       peg$c34 = /^[0-9]/,
       peg$c35 = peg$classExpectation([["0", "9"]], false, false),
-      peg$c36 = function(digits) { return parseInt(digits.join(""), 10); },
+      peg$c36 = function(digits) { return parseInt(digits.join(''), 10); },
       peg$c37 = "<",
       peg$c38 = peg$literalExpectation("<", false),
       peg$c39 = ">",
@@ -198,10 +198,10 @@ function peg$parse(input, options) {
             }
             const children = content.length === 1 ? content[0] : content;
             if (typeof children === "string") {
-              return xmlToJson(tag, children.trim()); // Trim whitespace
+              return xmlToJson(tag, children.trim());
             } else {
               const result = {};
-              content.forEach(child => {
+              content.forEach((child) => {
                 if (typeof child === "object" && child !== null) {
                   const [key, value] = Object.entries(child)[0];
                   if (result[key]) {
@@ -217,7 +217,7 @@ function peg$parse(input, options) {
           },
       peg$c44 = /^[^<]/,
       peg$c45 = peg$classExpectation(["<"], true, false),
-      peg$c46 = function(chars) { return chars.join("").trim(); },
+      peg$c46 = function(chars) { return chars.join('').trim(); },
       peg$c47 = /^[a-zA-Z0-9_]/,
       peg$c48 = peg$classExpectation([["a", "z"], ["A", "Z"], ["0", "9"], "_"], false, false),
       peg$c49 = peg$otherExpectation("Whitespace"),
@@ -1084,28 +1084,26 @@ function peg$parse(input, options) {
   }
 
 
-    // Functions to convert between JSON and XML
     function jsonToXml(json) {
       if (typeof json === "string") return json;
 
       if (Array.isArray(json)) {
-        return json.map(jsonToXml).join("");
+        return json.map(jsonToXml).join('');
       }
 
-      return Object.entries(json).map(([key, value]) => {
-        const content = jsonToXml(value);
-        return `<${key}>${content}</${key}>`;
-      }).join("");
+      return Object.entries(json)
+        .map(([key, value]) => `<${key}>${jsonToXml(value)}</${key}>`)
+        .join('');
     }
 
     function xmlToJson(tag, content) {
-      if (!content) return { [tag]: "" };
+      if (!content) return { [tag]: '' };
 
       const children = content.match(/<([^>]+)>(.*?)<\/\1>/gs) || [];
       if (!children.length) return { [tag]: content.trim() };
 
       const result = {};
-      children.forEach(child => {
+      children.forEach((child) => {
         const [, childTag, childContent] = child.match(/<([^>]+)>(.*?)<\/\1>/s);
         if (result[childTag]) {
           if (!Array.isArray(result[childTag])) result[childTag] = [result[childTag]];
